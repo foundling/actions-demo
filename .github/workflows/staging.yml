@@ -1,24 +1,27 @@
+permissions:
+  contents: write
+
 on:
   push:
     branches:
       - main
 
 jobs:
-  merge_main_to_dev:
+  merge_main_to_staging:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: checkout main
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Fetch all history for accurate merge
 
-      - name: Merge main into dev
+      - name: merge main into staging
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout dev
-          git pull origin dev
-          git merge main --no-ff -m "Merge main into dev after PR merge"
-          git push origin dev
+          git checkout staging
+          git pull origin staging
+          git merge main --no-ff -m "Merge main into staging after PR merge"
+          git push origin staging
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
