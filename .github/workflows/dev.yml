@@ -1,0 +1,27 @@
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  merge_main_to_dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for accurate merge
+
+      - name: merge main into dev
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout dev
+          git pull origin dev
+          git merge main --no-ff -m "Merge main into dev after PR merge"
+          git push origin dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
